@@ -7,6 +7,9 @@ body {
 .center {
   text-align: center;
 }
+.center-icon {
+  left: 60%;
+}
 .blue-font {
   color: #072f70;
 }
@@ -60,13 +63,4 @@ body {
   margin: 20;
   text-align: 'center';
   display: 'inline-block';
-}
-.app-bar {
-  position: fixed;
-  color:red;
-  top: 0;
-  z-index: 100;
-}
-.task-description {
-  font-size: 1.7em;
 }

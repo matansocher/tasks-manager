@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { fetchTasks, addTask } from '../actions';
+import { addTask } from '../actions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
 import Slider from 'material-ui/Slider';
 import Snackbar from 'material-ui/Snackbar';
-import RaisedButton from 'material-ui/RaisedButton';
-import ClearIcon from 'material-ui/svg-icons/content/clear';
+import DatePicker from 'material-ui/DatePicker';
+import BackIcon from 'material-ui/svg-icons/navigation/chevron-left';
 import SaveIcon from 'material-ui/svg-icons/action/done';
 
 
@@ -17,8 +16,7 @@ class AddTask extends Component {
     this.state = {
       title: '',
       priority: 3,
-      date: new Date().toJSON().slice(0,10),
-      more: '',
+      description: '',
       gesture: false,
       gestureText: '',
       loading: false
@@ -26,29 +24,20 @@ class AddTask extends Component {
   }
 
   componentDidMount() {
-    console.log('mounted');
+    // console.log('mounted');
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.setState({ loading: true });
-  //   if ((this.props.time.year !== nextProps.time.year) ||
-  //     (this.props.time.month !== nextProps.time.month)) { // check if date has changed
-  //       this.props.fetchTasks(nextProps.time.year, nextProps.time.month);
-  //   }
-  //   if (this.props.tasks !== nextProps.tasktasks, settingsObject, loading: false });
-  //   }
-  //   this.setState({ loading: false });
-  // }
 
   addTask = () => {
     this.setState({ loading: true }, () => {
-      const { title, priority, date, more } = this.state;
-
-      this.props.addTask({
+      const { title, priority, description } = this.state;
+      const id = Math.floor((Math.random() * 100000) + 1);
+      this.props.addTask("tuta", {
+        id,
         title,
         priority,
-        date,
-        more
+        date_created: new Date().toJSON().slice(0,10),
+        date_deadline: new Date().toJSON().slice(0,10),
+        description
       }, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Added Successfully!", gesture: true });
@@ -68,11 +57,18 @@ class AddTask extends Component {
     this.setState(change);
   }
 
+  handleDateChange = (e, date) => {
+    this.setState({
+      date_deadline: date
+    });
+  };
+
   handlePriorityChange = (e, value) => {
     this.setState({ priority: value });
   }
 
   render() {
+    const { loading, gesture, gestureText, title, priority, description, date_deadline } = this.state;
     const styles = {
       largeIcon: {
         width: 50,
@@ -83,28 +79,37 @@ class AddTask extends Component {
     return (
       <div className="container container-fluid blue-font">
         <h1>Add Task</h1>
-        {this.state.loading ? <CircularProgress size={80} thickness={8} /> : <span />}
         <MuiThemeProvider>
           <div>
-            <Snackbar open={this.state.gesture} message={this.state.gestureText}
+            {loading ? <CircularProgress size={80} thickness={8} /> : <span />}
+            <Snackbar open={gesture} message={gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
-            <br />
 
-            <textarea className="form-control" ref="title" name="title"
-              value={this.state.title} onChange={this.handleChange} />
-            <p>Title of the task</p>
-
-            <Slider min={1} max={5} step={1}
-              value={this.state.priority}
-              onChange={this.handlePriorityChange} />
-            <p>Pick the priority of the task</p>
-
-            <textarea className="form-control" ref="more" name="more"
-              value={this.state.more} onChange={this.handleChange} />
-            <p>Write some more meaningfull description on the task</p>
-
-            <ClearIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
+            <BackIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
             <SaveIcon style={styles.largeIcon} className="pull-right" onClick={this.addTask} />
+
+            <br /><br />
+
+            <h4>Title:</h4>
+            <textarea className="form-control" ref="title" name="title"
+              placeholder="Title"
+              value={title} onChange={this.handleChange} />
+
+            <h4>Priority: {priority}</h4>
+            <Slider min={1} max={5} step={1}
+              value={priority}
+              onChange={this.handlePriorityChange} />
+
+            <h4>Description:</h4>
+            <textarea className="form-control" ref="description" name="description"
+              placeholder="Description"
+              value={description} onChange={this.handleChange} />
+
+            <h4>Dead Line:</h4>
+            <DatePicker hintText="Dead Line"
+              value={date_deadline} 
+              onChange={this.handleDateChange} />
+
           </div>
         </MuiThemeProvider>
       </div>
@@ -112,10 +117,4 @@ class AddTask extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    tasks: state.tasks
-  };
-}
-
-export default connect(mapStateToProps, { addTask })(AddTask);
+export default connect(null, { addTask })(AddTask);

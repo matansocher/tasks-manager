@@ -8,6 +8,7 @@ export default class NoMatch extends Component {
         <h1>Oops, something went wrong</h1>
         <ul className="list-group">
           <li className="list-group-item list-group-item-info"><Link to="/">Tasks List</Link></li>
+          <li className="list-group-item list-group-item-info"><Link to="/Completed">Completed</Link></li>
         </ul>
       </div>
     );

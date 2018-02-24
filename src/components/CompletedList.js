@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchTasks, addTask, editTask, deleteTask, completedOrReturnToTasks } from '../actions';
+import { fetchCompleted, editTask, deleteTask, completedOrReturnToTasks } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import Snackbar from 'material-ui/Snackbar';
 
-class TasksList extends Component {
+class CompletedList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tasks: [],
+      completed: [],
       gesture: false,
       gestureText: '',
       loading: false
@@ -22,8 +20,8 @@ class TasksList extends Component {
 
   componentDidMount() {
     this.setState({ loading: true }, () => {
-      if(_.isEmpty(this.state.tasks)) {
-        this.props.fetchTasks("tuta");
+      if(_.isEmpty(this.state.completed)) {
+        this.props.fetchCompleted("tuta");
       }
     });
     this.setState({ loading: false });
@@ -31,9 +29,9 @@ class TasksList extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: true }, () => {
-      if (this.state.tasks !== nextProps.tasks) { // check if tasks array has changed
-        const tasks = nextProps.tasks;
-        this.setState({ tasks });
+      if (this.state.completed !== nextProps.completed) { // check if tasks array has changed
+        const completed = nextProps.completed;
+        this.setState({ completed });
       }
       this.setState({ loading: false });
     });
@@ -69,24 +67,16 @@ class TasksList extends Component {
     });
   }
 
-  handleAddClick = () => {
-    this.props.history.push('/AddTask');
-  }
-
-  handleRequestClose = () => {
-    this.setState({ gesture: false });
-  };
-
   renderList() {
-    const { tasks } = this.state;
-    if (tasks.length === 1)
-      return (<div className="container container-fluid"><h2>No Tasks Yet!</h2></div>);
+    const { completed } = this.state;
+    if (completed.length === 1)
+      return (<div className="container container-fluid"><h2>No Tasks Completed Yet!</h2></div>);
 
     return (
-      tasks.map(task => {
+      completed.map(task => {
         const key = `${task.id}`;
         if (task.id !== 0) {
-          return (<Task key={key} task={task} completed={false}
+          return (<Task key={key} task={task} completed={true}
             editTask={this.editTask}
             deleteTask={this.deleteTask}
             completedOrReturn={this.completedOrReturn} />)
@@ -100,17 +90,12 @@ class TasksList extends Component {
     return(
       <div className="container container-fluid blue-font">
 
-        <h1>Tasks</h1>
+        <h1>Completed Tasks</h1>
         <MuiThemeProvider>
           <div>
             {this.state.loading ? <CircularProgress size={60} thickness={7} /> : <span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
-
-            <FloatingActionButton className="float" onClick={this.handleAddClick}
-              backgroundColor={'#D61D4C'}>
-              <ContentAdd />
-            </FloatingActionButton>
 
             {this.renderList()}
             <br /><hr /><br />
@@ -123,8 +108,8 @@ class TasksList extends Component {
 
 function mapStateToProps(state) {
   return {
-    tasks: state.tasks
+    completed: state.completed
   };
 }
 
-export default connect(mapStateToProps, { fetchTasks, addTask, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
+export default connect(mapStateToProps, { fetchCompleted, editTask, deleteTask, completedOrReturnToTasks })(CompletedList);

@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 
 export function getBackgroundColor(priority) {
   const green = '#34A853';

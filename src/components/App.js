@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
 import AddTask from './AddTask';
 import TasksList from './TasksList';
+import CompletedList from './CompletedList';
 import NoMatch from './NoMatch';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppBar from 'material-ui/AppBar';
@@ -9,15 +11,11 @@ import Paper from 'material-ui/Paper';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import ViewListIcon from 'material-ui/svg-icons/action/view-list';
+import DoneIcon from 'material-ui/svg-icons/action/check-circle';
 import SettingsIcon from 'material-ui/svg-icons/action/settings';
-// import ContentLink from 'material-ui/svg-icons/content/link';
 import Divider from 'material-ui/Divider';
 import ContentCopy from 'material-ui/svg-icons/content/low-priority';
 import Download from 'material-ui/svg-icons/file/file-download';
-import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
-// import Delete from 'material-ui/svg-icons/action/delete';
-// import FontIcon from 'material-ui/FontIcon';
 
 class App extends Component {
   constructor(props) {
@@ -37,10 +35,10 @@ class App extends Component {
   }
 
   changeRoute = (e) => {
-    console.log(e);
-    console.log('haha');
-    console.log(this.props);
-    // this.props.history.push('/Settings');
+    // console.log(e);
+    // console.log(this.props);
+    // this.props.history.push('/Completed');
+    this.setState({ open: false });
   }
 
   render() {
@@ -49,16 +47,17 @@ class App extends Component {
         <div>
           <MuiThemeProvider>
             <div>
-              <AppBar className="app-bar" title="Sal-Cal"
+              <AppBar className="app-bar" title="Tasks-Manager"
                 iconClassNameRight="muidocs-icon-navigation-expand-more"
                 onClick={this.handleToggle}
+                style={{backgroundColor: '#D61D4C', position: 'fixed', top: 0}}
               />
-              <Drawer width={200} docked={false} open={this.state.open} onRequestChange={this.closeDrawer}>
-                <AppBar className="app-bar" title="Sal-Cal" />
-                <p className="app-bar">aaaaaaa</p>
+              <Drawer width={300} docked={false} open={this.state.open} onRequestChange={this.closeDrawer}>
+                <AppBar className="app-bar" style={{backgroundColor: '#D61D4C'}} title="Tasks-Manager" />
                 <Paper>
                   <Menu>
-                    <MenuItem onClick={this.changeRoute} primaryText="Tasks List" leftIcon={<ViewListIcon />} />
+                    <Link to="/"><MenuItem onClick={this.changeRoute} primaryText="Tasks List" leftIcon={<ViewListIcon />} /></ Link>
+                    <Link to="/Completed"><MenuItem onClick={this.changeRoute} primaryText="Completed Tasks" leftIcon={<DoneIcon />} /></ Link>
                     <MenuItem onClick={this.changeRoute} primaryText="Settings" leftIcon={<SettingsIcon />} />
                     <Divider />
                     <MenuItem primaryText="Contact Us" leftIcon={<ContentCopy />} />
@@ -68,9 +67,11 @@ class App extends Component {
               </Drawer>
             </div>
           </MuiThemeProvider>
-
+          <br />
           <hr/>
           <Switch>
+            <Route path="/AddTask" component={AddTask}/>
+            <Route path="/Completed" component={CompletedList}/>
             <Route path="/" component={TasksList}/>
             <Route path="*" component={NoMatch}/>
           </Switch>
