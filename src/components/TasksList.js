@@ -23,10 +23,11 @@ class TasksList extends Component {
   componentDidMount() {
     this.setState({ loading: true }, () => {
       if(_.isEmpty(this.state.tasks)) {
-        this.props.fetchTasks("tuta");
+        this.props.fetchTasks("tuta", () => {
+          this.setState({ loading: false });
+        });
       }
     });
-    this.setState({ loading: false });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -61,7 +62,7 @@ class TasksList extends Component {
 
   completedOrReturn = (task, type) => {
     this.setState({ loading: true } , () => {
-      this.props.completedOrReturnToTasks(type, "tuta", task, () => { // 1 is to move to completed, 2 is to move back to todos
+      this.props.completedOrReturnToTasks(type, "tuta", task, () => { // type: 1 is to move to completed, 2 is to move back to todos
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Completed, Well Done", gesture: true });
         }, 1000);

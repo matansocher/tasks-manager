@@ -151,9 +151,7 @@ export default class Task extends Component {
   renderEdit() {
     const { title, priority, description, date_deadline } = this.state;
     const styles = {
-      bgcolor: {
-        backgroundColor: getBackgroundColor(priority)
-      }
+      bgcolor: { backgroundColor: getBackgroundColor(priority) }
     };
     return (
       <li className="col-sm-12 col-md-12 list-group-item">
@@ -161,26 +159,23 @@ export default class Task extends Component {
           <div>
 
             <ClearIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCnacelEditClick} />
-            <SaveIcon style={styles.largeIcon} className="pull-right" onClick={this.editTask} />
+            <SaveIcon style={styles.largeIcon} className="pull-right icon" onClick={this.editTask} />
 
             <br /><br />
 
-            <h3>Title:</h3>
             <textarea className="form-control" ref="title" name="title"
               placeholder="Title"
               value={title} onChange={this.handleChange} />
 
-            <h3>Priority: {priority}</h3>
             <Slider min={1} max={5} step={1}
               value={priority}
               onChange={this.handlePriorityChange} />
+            <h3>{priority}</h3>
 
-            <h3>Description:</h3>
             <textarea className="form-control" ref="description" name="description"
               placeholder="Description"
               value={description} onChange={this.handleChange} />
 
-            <h3>Dead Line:</h3>
             <DatePicker hintText="Dead Line"
             value={date_deadline}
             onChange={this.handleDateChange} />

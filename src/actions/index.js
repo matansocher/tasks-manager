@@ -7,6 +7,7 @@ export function fetchTasks(username, callback) {
     fire.database().ref(`${username}/tasks`).once('value', snap => {
       const tasksObject = snap.val();
       const array = _.values(tasksObject);
+      callback();
       dispatch({
         type: FETCH_TASKS,
         payload: array
@@ -69,6 +70,7 @@ export function fetchCompleted(username, callback) {
     fire.database().ref(`${username}/completed`).once('value', snap => {
       const tasksObject = snap.val();
       const array = _.values(tasksObject);
+      callback();
       dispatch({
         type: FETCH_COMPLETED,
         payload: array

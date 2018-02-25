@@ -1,19 +1,19 @@
 // import React from 'react';
 
 export function getBackgroundColor(priority) {
-  const green = '#34A853';
-  const blue = '#4286F4';
-  const yellow = '#FCCA3F';
-  const orange = '#FF7F00';
-  const red = '#EA4335';
+  const wellDone = '#F74D4D'; // high priority
+  const mediumWell = '#F78B4D';
+  const medium = '#F6A94D'; // medium priority
+  const rare = '#F8C74E';
+  const raw = '#CDBD34'; // low priority
 
   switch(priority) {
-    case 1: return green;
-    case 2: return blue;
-    case 3: return yellow;
-    case 4: return orange;
-    case 5: return red;
-    default: return yellow;
+    case 1: return wellDone;
+    case 2: return mediumWell;
+    case 3: return medium;
+    case 4: return rare;
+    case 5: return raw;
+    default: return medium;
 
   }
 }

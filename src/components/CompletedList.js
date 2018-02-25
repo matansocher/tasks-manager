@@ -21,10 +21,11 @@ class CompletedList extends Component {
   componentDidMount() {
     this.setState({ loading: true }, () => {
       if(_.isEmpty(this.state.completed)) {
-        this.props.fetchCompleted("tuta");
+        this.props.fetchCompleted("tuta", () => {
+          this.setState({ loading: false });
+        });
       }
     });
-    this.setState({ loading: false });
   }
 
   componentWillReceiveProps(nextProps) {
