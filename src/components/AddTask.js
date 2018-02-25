@@ -17,6 +17,7 @@ class AddTask extends Component {
       title: '',
       priority: 3,
       description: '',
+      date_deadline: '', // new Date().toJSON().slice(0,10)
       gesture: false,
       gestureText: '',
       loading: false
@@ -29,14 +30,15 @@ class AddTask extends Component {
 
   addTask = () => {
     this.setState({ loading: true }, () => {
-      const { title, priority, description } = this.state;
+      const { title, priority, description, date_deadline } = this.state;
       const id = Math.floor((Math.random() * 100000) + 1);
+      const date_created = new Date().toJSON().slice(0,10);
       this.props.addTask("tuta", {
         id,
         title,
         priority,
-        date_created: new Date().toJSON().slice(0,10),
-        date_deadline: new Date().toJSON().slice(0,10),
+        date_created,
+        date_deadline,
         description
       }, () => {
         setTimeout(() => {
@@ -58,9 +60,7 @@ class AddTask extends Component {
   }
 
   handleDateChange = (e, date) => {
-    this.setState({
-      date_deadline: date
-    });
+    this.setState({ date_deadline: date });
   };
 
   handlePriorityChange = (e, value) => {
@@ -86,28 +86,25 @@ class AddTask extends Component {
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
             <BackIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
-            <SaveIcon style={styles.largeIcon} className="pull-right" onClick={this.addTask} />
+            <SaveIcon style={styles.largeIcon} className="pull-right icon" onClick={this.addTask} />
 
             <br /><br />
 
-            <h4>Title:</h4>
             <textarea className="form-control" ref="title" name="title"
               placeholder="Title"
               value={title} onChange={this.handleChange} />
 
-            <h4>Priority: {priority}</h4>
             <Slider min={1} max={5} step={1}
               value={priority}
               onChange={this.handlePriorityChange} />
+            <h4>{priority}</h4>
 
-            <h4>Description:</h4>
             <textarea className="form-control" ref="description" name="description"
               placeholder="Description"
               value={description} onChange={this.handleChange} />
 
-            <h4>Dead Line:</h4>
-            <DatePicker hintText="Dead Line"
-              value={date_deadline} 
+            <DatePicker hintText="Dead Line Date"
+              value={date_deadline}
               onChange={this.handleDateChange} />
 
           </div>

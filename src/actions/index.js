@@ -2,41 +2,6 @@ import _ from 'lodash';
 import { FETCH_TASKS, ADD_TASK, EDIT_TASK, DELETE_TASK, FETCH_COMPLETED, MARK_AS_COMPLETED, RETURN_TO_TASKS } from '../actions/types';
 import fire from '../config';
 
-export function fetchDays(year, month, callback) {
-  const settings_ref = fire.database().ref(`days/${year}/${month}/settings`);
-  fire.database().ref(`days/${year}/${month}`).once('value', snap => {
-    // if no settings object exists - create empty one
-    if (!snap.hasChild('settings')) {
-      settings_ref.set({
-        day: 0,
-        month
-      }).then(() => {
-        return dispatch => {
-          fire.database().ref(`days/${year}/${month}`).on('value', snap => {
-            const daysObject = snap.val();
-            const array = _.values(daysObject);
-            dispatch({
-              type: FETCH_TASKS,
-              payload: array
-            });
-          });
-        };
-      });
-    }
-  });
-
-  return dispatch => {
-    fire.database().ref(`days/${year}/${month}`).on('value', snap => {
-      const daysObject = snap.val();
-      const array = _.values(daysObject);
-      dispatch({
-        type: FETCH_TASKS,
-        payload: array
-      });
-    });
-  };
-}
-
 export function fetchTasks(username, callback) {
   return dispatch => {
     fire.database().ref(`${username}/tasks`).once('value', snap => {
@@ -60,7 +25,7 @@ export function addTask(username, task, callback) {
       title,
       priority,
       description
-    })
+    });
     callback();
     dispatch({
       type: ADD_TASK,
@@ -71,7 +36,7 @@ export function addTask(username, task, callback) {
 
 export function editTask(username, task, callback) {
   const { id, date_created, date_deadline, title, priority, description } = task;
-  // return dispatch => {
+  return dispatch => {
     fire.database().ref(`${username}/tasks/${id}`).set({
       id,
       date_created,
@@ -79,19 +44,13 @@ export function editTask(username, task, callback) {
       title,
       priority,
       description
-    }).then(() => {
-      callback();
-      return {
-        type: EDIT_TASK,
-        payload: task
-      }
     });
-    // callback();
-    // dispatch({
-    //   type: ADD_TASK,
-    //   payload: task
-    // });
-  // }
+    callback();
+    dispatch({
+      type: EDIT_TASK,
+      payload: task
+    });
+  }
 }
 
 export function deleteTask(username, task, callback) {

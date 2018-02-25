@@ -9,8 +9,9 @@ export default function(state = [], action) {
     case ADD_TASK:
       return _.concat(newState, action.payload);
     case EDIT_TASK:
-      break;
-      // return _.concat(newState, action.payload);
+      const i = _.findIndex(state, o => o.id === action.payload.id );
+      newState[i] = action.payload;
+      return newState;
     case DELETE_TASK:
       return _.without(newState, action.payload);
     case MARK_AS_COMPLETED:

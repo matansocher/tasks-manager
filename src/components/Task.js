@@ -87,10 +87,12 @@ export default class Task extends Component {
   }
 
   handleDateChange = (e, date) => {
-    this.setState({
-      date_deadline: date
-    });
+    this.setState({ date_deadline: date });
   };
+
+  handlePriorityChange = (e, value) => {
+    this.setState({ priority: value });
+  }
 
   renderRegular() {
     const { detailed, completed } = this.state;
@@ -108,12 +110,12 @@ export default class Task extends Component {
               iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
-               <MenuItem primaryText="Edit" leftIcon={<EditIcon />}
-                  onClick={this.handleEditClick} />
                { completed ?
                  <MenuItem primaryText="Return To Tasks" leftIcon={<AssignmentIcon />}
                     onClick={this.handleMarkAsNotCompleted} />
                  :
+                 <MenuItem primaryText="Edit" leftIcon={<EditIcon />}
+                    onClick={this.handleEditClick} />
                  <MenuItem primaryText="Completed" leftIcon={<DoneIcon />}
                     onClick={this.handleMarkAsCompleted} />
                }
@@ -121,13 +123,17 @@ export default class Task extends Component {
                   onClick={this.handleDeleteClick} />
             </IconMenu>
 
-            <h4>{title}</h4>
-            {
-              detailed ?
+            <h3>{title}</h3>
+            { detailed ?
               <div>
-                <h3>{description}</h3>
+                <p>{description}</p>
                 <span>Date Created: {date_created}</span> <br />
-                <span>Deadline Date: {date_deadline}</span> <br />
+                <span>Deadline Date: </span>
+                { date_deadline === new Date().toJSON().slice(0,10) ?
+                  {"Today"}
+                  :
+                  {date_deadline}
+                }<br />
                 <LessIcon onClick={this.handleClickToToggleDetailed} />
               </div>
               :
@@ -155,7 +161,7 @@ export default class Task extends Component {
           <div>
 
             <ClearIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCnacelEditClick} />
-            <SaveIcon style={styles.largeIcon} className="pull-right" onClick={this.props.editTask} />
+            <SaveIcon style={styles.largeIcon} className="pull-right" onClick={this.editTask} />
 
             <br /><br />
 
