@@ -28,9 +28,20 @@ class AddTask extends Component {
     // console.log('mounted');
   }
 
+  makeID = () => {
+    let text = "";
+    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (var i = 0; i < 20; i++)
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
   addTask = () => {
     this.setState({ loading: true }, () => {
       const { title, priority, description, date_deadline } = this.state;
+      // const id = this.makeID();
       const id = Math.floor((Math.random() * 100000) + 1);
       const date_created = new Date().toJSON().slice(0,10);
       this.props.addTask("tuta", {
