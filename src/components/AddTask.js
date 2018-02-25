@@ -41,8 +41,8 @@ class AddTask extends Component {
   addTask = () => {
     this.setState({ loading: true }, () => {
       const { title, priority, description, date_deadline } = this.state;
-      // const id = this.makeID();
-      const id = Math.floor((Math.random() * 100000) + 1);
+      const id = this.makeID();
+      // const id = Math.floor((Math.random() * 100000) + 1);
       const date_created = new Date().toJSON().slice(0,10);
       this.props.addTask("tuta", {
         id,

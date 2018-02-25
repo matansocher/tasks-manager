@@ -20,6 +20,7 @@ export default class Task extends Component {
   constructor(props) {
     super(props);
     const { title, description, date_created, date_deadline, priority } = props.task;
+    console.log(date_deadline);
     this.state = {
       task: props.task,
       title,
@@ -97,10 +98,12 @@ export default class Task extends Component {
   renderRegular() {
     const { detailed, completed } = this.state;
     const { title, priority, description, date_created, date_deadline } = this.state.task;
+    const date_deadlinee = date_deadline === new Date().toJSON().slice(0,10) ?
+      "Today"
+      :
+      date_deadline;
     const styles = {
-      bgcolor: {
-        backgroundColor: getBackgroundColor(priority)
-      }
+      bgcolor: { backgroundColor: getBackgroundColor(priority) }
     };
     return (
       <li className="col-sm-12 col-md-12 list-group-item" style={styles.bgcolor}>
@@ -114,10 +117,12 @@ export default class Task extends Component {
                  <MenuItem primaryText="Return To Tasks" leftIcon={<AssignmentIcon />}
                     onClick={this.handleMarkAsNotCompleted} />
                  :
-                 <MenuItem primaryText="Edit" leftIcon={<EditIcon />}
-                    onClick={this.handleEditClick} />
-                 <MenuItem primaryText="Completed" leftIcon={<DoneIcon />}
-                    onClick={this.handleMarkAsCompleted} />
+                 <div>
+                   <MenuItem primaryText="Edit" leftIcon={<EditIcon />}
+                      onClick={this.handleEditClick} />
+                   <MenuItem primaryText="Completed" leftIcon={<DoneIcon />}
+                      onClick={this.handleMarkAsCompleted} />
+                 </div>
                }
                <MenuItem primaryText="Remove" leftIcon={<Delete />}
                   onClick={this.handleDeleteClick} />
@@ -128,12 +133,8 @@ export default class Task extends Component {
               <div>
                 <p>{description}</p>
                 <span>Date Created: {date_created}</span> <br />
-                <span>Deadline Date: </span>
-                { date_deadline === new Date().toJSON().slice(0,10) ?
-                  {"Today"}
-                  :
-                  {date_deadline}
-                }<br />
+                <span>Deadline Date: {date_deadlinee}</span>
+                <br />
                 <LessIcon onClick={this.handleClickToToggleDetailed} />
               </div>
               :
@@ -154,7 +155,7 @@ export default class Task extends Component {
       bgcolor: { backgroundColor: getBackgroundColor(priority) }
     };
     return (
-      <li className="col-sm-12 col-md-12 list-group-item">
+      <li className="col-sm-12 col-md-12 list-group-item" style={styles.bgcolor}>
         <MuiThemeProvider>
           <div>
 
