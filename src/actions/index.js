@@ -28,6 +28,7 @@ export function setTask(type, username, task, callback) { // 1 is to add, 2 is t
   const TYPE = type === 1 ? ADD_TASK : EDIT_TASK;
   const list = type === 1 ? 'tasks' : 'completed';
   const { id, date_created, date_deadline, title, priority, description } = task;
+  console.log(date_deadline);
   return dispatch => {
     fire.database().ref(`${username}/${list}/${id}`).set({
       id,

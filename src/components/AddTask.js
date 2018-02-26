@@ -31,17 +31,15 @@ class AddTask extends Component {
   }
 
   addTask = () => {
+
+    console.log(this.state);
     this.setState({ loading: true }, () => {
       const { title, priority, description, date_deadline } = this.state;
-      const id = makeID();
-      // const id = Math.floor((Math.random() * 100000) + 1);
-      const date_created = new Date().toJSON().slice(0,10);
       this.props.setTask(1, "tuta", {
-      // this.props.addTask("tuta", {
-        id,
+        id: makeID(),
         title,
         priority,
-        date_created,
+        date_created: new Date().toJSON().slice(0,10),
         date_deadline,
         description
       }, () => {
@@ -64,7 +62,8 @@ class AddTask extends Component {
   }
 
   handleDateChange = (e, date_deadline) => {
-    date_deadline = createDateFormat(date_deadline);
+    console.log(date_deadline);
+    // date_deadline = createDateFormat(date_deadline);
     this.setState({ date_deadline });
   };
 

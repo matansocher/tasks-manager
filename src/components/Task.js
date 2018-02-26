@@ -54,7 +54,7 @@ export default class Task extends Component {
     const { id } = this.state.task;
     let { title, description, date_deadline, priority } = this.state;
     const date_created = new Date().toJSON().slice(0,10);
-    date_deadline = createDateFormat(date_deadline);
+    // date_deadline = createDateFormat(date_deadline);
     console.log(date_deadline);
     const task = {
       id,
@@ -89,8 +89,8 @@ export default class Task extends Component {
     this.setState(change);
   }
 
-  handleDateChange = (e, date) => {
-    this.setState({ date_deadline: date });
+  handleDateChange = (e, date_deadline) => {
+    this.setState({ date_deadline });
   };
 
   handlePriorityChange = (e, value) => {
@@ -100,14 +100,16 @@ export default class Task extends Component {
   renderRegular() {
     const { detailed, completed } = this.state;
     let { title, priority, description, date_created, date_deadline } = this.state.task;
+    // date_deadline = createDateFormat(date_deadline);
     date_created = date_created === new Date().toJSON().slice(0,10) ?
       "Today"
       :
-      date_deadline;
+      date_created;
     date_deadline = date_deadline === new Date().toJSON().slice(0,10) ?
       "Today"
       :
       date_deadline;
+      console.log(date_deadline);
     const styles = {
       bgcolor: { backgroundColor: getBackgroundColor(priority) }
     };
@@ -139,7 +141,7 @@ export default class Task extends Component {
               { detailed ?
                 <div>
                   <p>{description}</p>
-                  <span>Date Created: {date_created}</span> <br />
+                  <span>Last Updated: {date_created}</span> <br />
                   <span>Deadline Date: {date_deadline}</span>
                   <br />
                   <LessIcon className="icon" />
