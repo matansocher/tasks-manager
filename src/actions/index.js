@@ -2,19 +2,70 @@ import _ from 'lodash';
 import { FETCH_TASKS, ADD_TASK, EDIT_TASK, DELETE_TASK, FETCH_COMPLETED, MARK_AS_COMPLETED, RETURN_TO_TASKS } from '../actions/types';
 import fire from '../config';
 
-export function fetchTasks(username, callback) {
+export function fetchTasks(type, username, callback) { // 1 is tasks, 2 is completed
+  const TYPE = type === 1 ? FETCH_TASKS : FETCH_COMPLETED;
+  const list = type === 1 ? 'tasks' : 'completed';
   return dispatch => {
-    fire.database().ref(`${username}/tasks`).once('value', snap => {
+    fire.database().ref(`${username}/${list}`).once('value', snap => {
       const tasksObject = snap.val();
       const array = _.values(tasksObject);
       callback();
       dispatch({
-        type: FETCH_TASKS,
+        type: TYPE,
         payload: array
       });
     });
   }
 }
+
+// export function fetchTasks(username, callback) {
+//   return dispatch => {
+//     fire.database().ref(`${username}/tasks`).once('value', snap => {
+//       const tasksObject = snap.val();
+//       const array = _.values(tasksObject);
+//       callback();
+//       dispatch({
+//         type: FETCH_TASKS,
+//         payload: array
+//       });
+//     });
+//   }
+// }
+//
+// export function fetchCompleted(username, callback) {
+//   return dispatch => {
+//     fire.database().ref(`${username}/completed`).once('value', snap => {
+//       const tasksObject = snap.val();
+//       const array = _.values(tasksObject);
+//       callback();
+//       dispatch({
+//         type: FETCH_COMPLETED,
+//         payload: array
+//       });
+//     });
+//   }
+// }
+
+// export function setTask(type, username, task, callback) { // 1 is to add, 2 is to edit
+//   const TYPE = type === 1 ? ADD_TASK : EDIT_TASK;
+//   const list = type === 1 ? 'tasks' : 'completed';
+//   const { id, date_created, date_deadline, title, priority, description } = task;
+//   return dispatch => {
+//     fire.database().ref(`${username}/${list}/${id}`).set({
+//       id,
+//       date_created,
+//       date_deadline,
+//       title,
+//       priority,
+//       description
+//     });
+//     callback();
+//     dispatch({
+//       type: TYPE,
+//       payload: task
+//     });
+//   }
+// }
 
 export function addTask(username, task, callback) {
   const { id, date_created, date_deadline, title, priority, description } = task;
@@ -61,20 +112,6 @@ export function deleteTask(username, task, callback) {
     dispatch({
       type: DELETE_TASK,
       payload: task
-    });
-  }
-}
-
-export function fetchCompleted(username, callback) {
-  return dispatch => {
-    fire.database().ref(`${username}/completed`).once('value', snap => {
-      const tasksObject = snap.val();
-      const array = _.values(tasksObject);
-      callback();
-      dispatch({
-        type: FETCH_COMPLETED,
-        payload: array
-      });
     });
   }
 }

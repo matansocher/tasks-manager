@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addTask } from '../actions';
+import { makeID } from '../actions/CommonFunctions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
 import Slider from 'material-ui/Slider';
@@ -28,22 +29,13 @@ class AddTask extends Component {
     // console.log('mounted');
   }
 
-  makeID = () => {
-    let text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (var i = 0; i < 20; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-  }
-
   addTask = () => {
     this.setState({ loading: true }, () => {
       const { title, priority, description, date_deadline } = this.state;
-      const id = this.makeID();
+      const id = makeID();
       // const id = Math.floor((Math.random() * 100000) + 1);
       const date_created = new Date().toJSON().slice(0,10);
+      // this.props.setTask(1, "tuta", {
       this.props.addTask("tuta", {
         id,
         title,
@@ -101,8 +93,7 @@ class AddTask extends Component {
 
             <br /><br />
 
-            <textarea className="form-control" ref="title" name="title"
-              placeholder="Title"
+            <textarea className="form-control" name="title" placeholder="Title"
               value={title} onChange={this.handleChange} />
 
             <Slider min={1} max={5} step={1}
@@ -110,8 +101,7 @@ class AddTask extends Component {
               onChange={this.handlePriorityChange} />
             <h4>{priority}</h4>
 
-            <textarea className="form-control" ref="description" name="description"
-              placeholder="Description"
+            <textarea className="form-control" name="description" placeholder="Description"
               value={description} onChange={this.handleChange} />
 
             <DatePicker hintText="Dead Line Date"
@@ -124,5 +114,5 @@ class AddTask extends Component {
     );
   }
 }
-
+// export default connect(null, { setTask })(AddTask);
 export default connect(null, { addTask })(AddTask);

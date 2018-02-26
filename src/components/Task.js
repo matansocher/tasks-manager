@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getBackgroundColor } from '../actions/CommonFunctions'
+import { getBackgroundColor } from '../actions/CommonFunctions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Slider from 'material-ui/Slider';
 import DatePicker from 'material-ui/DatePicker';
@@ -53,7 +53,8 @@ export default class Task extends Component {
 
   editTask = () => {
     const { id } = this.state.task;
-    const { title, description, date_created, date_deadline, priority } = this.state;
+    const { title, description, date_deadline, priority } = this.state;
+    const date_created = new Date().toJSON().slice(0,10);
     const task = {
       id,
       title,

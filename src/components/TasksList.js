@@ -23,7 +23,7 @@ class TasksList extends Component {
   componentDidMount() {
     this.setState({ loading: true }, () => {
       if(_.isEmpty(this.state.tasks)) {
-        this.props.fetchTasks("tuta", () => {
+        this.props.fetchTasks(1, "tuta", () => { // 1 is for incompleted tasks
           this.setState({ loading: false });
         });
       }
@@ -127,5 +127,5 @@ function mapStateToProps(state) {
     tasks: state.tasks
   };
 }
-
-export default connect(mapStateToProps, { fetchTasks, addTask, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
+// export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);
+export default connect(mapStateToProps, { fetchTasks, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
