@@ -6,7 +6,13 @@ export function fetchTasks(type, username, callback) { // 1 is tasks, 2 is compl
   const TYPE = type === 1 ? FETCH_TASKS : FETCH_COMPLETED;
   const list = type === 1 ? 'tasks' : 'completed';
   return dispatch => {
-    fire.database().ref(`${username}/${list}`).once('value', snap => {
+
+    // var ref = firebase.database().ref("dinosaurs");
+    // ref.orderByChild("height").on("child_added", function(snapshot) {
+    //   console.log(snapshot.key + " was " + snapshot.val().height + " m tall");
+    // });
+
+    fire.database().ref(`${username}/${list}`).orderByChild('priority').once('value', snap => {
       const tasksObject = snap.val();
       const array = _.values(tasksObject);
       callback();
@@ -18,36 +24,47 @@ export function fetchTasks(type, username, callback) { // 1 is tasks, 2 is compl
   }
 }
 
-// export function fetchTasks(username, callback) {
+export function setTask(type, username, task, callback) { // 1 is to add, 2 is to edit
+  const TYPE = type === 1 ? ADD_TASK : EDIT_TASK;
+  const list = type === 1 ? 'tasks' : 'completed';
+  const { id, date_created, date_deadline, title, priority, description } = task;
+  return dispatch => {
+    fire.database().ref(`${username}/${list}/${id}`).set({
+      id,
+      date_created,
+      date_deadline,
+      title,
+      priority,
+      description
+    });
+    callback();
+    dispatch({
+      type: TYPE,
+      payload: task
+    });
+  }
+}
+
+// export function addTask(username, task, callback) {
+//   const { id, date_created, date_deadline, title, priority, description } = task;
 //   return dispatch => {
-//     fire.database().ref(`${username}/tasks`).once('value', snap => {
-//       const tasksObject = snap.val();
-//       const array = _.values(tasksObject);
-//       callback();
-//       dispatch({
-//         type: FETCH_TASKS,
-//         payload: array
-//       });
+//     fire.database().ref(`${username}/tasks/${id}`).set({
+//       id,
+//       date_created,
+//       date_deadline,
+//       title,
+//       priority,
+//       description
 //     });
-//   }
-// }
-//
-// export function fetchCompleted(username, callback) {
-//   return dispatch => {
-//     fire.database().ref(`${username}/completed`).once('value', snap => {
-//       const tasksObject = snap.val();
-//       const array = _.values(tasksObject);
-//       callback();
-//       dispatch({
-//         type: FETCH_COMPLETED,
-//         payload: array
-//       });
+//     callback();
+//     dispatch({
+//       type: ADD_TASK,
+//       payload: task
 //     });
 //   }
 // }
 
-// export function setTask(type, username, task, callback) { // 1 is to add, 2 is to edit
-//   const TYPE = type === 1 ? ADD_TASK : EDIT_TASK;
+// export function editTask(type, username, task, callback) {
 //   const list = type === 1 ? 'tasks' : 'completed';
 //   const { id, date_created, date_deadline, title, priority, description } = task;
 //   return dispatch => {
@@ -61,53 +78,16 @@ export function fetchTasks(type, username, callback) { // 1 is tasks, 2 is compl
 //     });
 //     callback();
 //     dispatch({
-//       type: TYPE,
+//       type: EDIT_TASK,
 //       payload: task
 //     });
 //   }
 // }
 
-export function addTask(username, task, callback) {
-  const { id, date_created, date_deadline, title, priority, description } = task;
+export function deleteTask(type, username, task, callback) {
+  const list = type === 1 ? 'tasks' : 'completed';
   return dispatch => {
-    fire.database().ref(`${username}/tasks/${id}`).set({
-      id,
-      date_created,
-      date_deadline,
-      title,
-      priority,
-      description
-    });
-    callback();
-    dispatch({
-      type: ADD_TASK,
-      payload: task
-    });
-  }
-}
-
-export function editTask(username, task, callback) {
-  const { id, date_created, date_deadline, title, priority, description } = task;
-  return dispatch => {
-    fire.database().ref(`${username}/tasks/${id}`).set({
-      id,
-      date_created,
-      date_deadline,
-      title,
-      priority,
-      description
-    });
-    callback();
-    dispatch({
-      type: EDIT_TASK,
-      payload: task
-    });
-  }
-}
-
-export function deleteTask(username, task, callback) {
-  return dispatch => {
-    fire.database().ref(`${username}/tasks/${task.id}`).remove();
+    fire.database().ref(`${username}/${list}/${task.id}`).remove();
     callback();
     dispatch({
       type: DELETE_TASK,

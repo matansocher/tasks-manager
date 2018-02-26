@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getBackgroundColor } from '../actions/CommonFunctions';
+import { getBackgroundColor, createDateFormat } from '../actions/CommonFunctions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Slider from 'material-ui/Slider';
 import DatePicker from 'material-ui/DatePicker';
@@ -20,7 +20,6 @@ export default class Task extends Component {
   constructor(props) {
     super(props);
     const { title, description, date_created, date_deadline, priority } = props.task;
-    console.log(date_deadline);
     this.state = {
       task: props.task,
       title,
@@ -53,8 +52,10 @@ export default class Task extends Component {
 
   editTask = () => {
     const { id } = this.state.task;
-    const { title, description, date_deadline, priority } = this.state;
+    let { title, description, date_deadline, priority } = this.state;
     const date_created = new Date().toJSON().slice(0,10);
+    date_deadline = createDateFormat(date_deadline);
+    console.log(date_deadline);
     const task = {
       id,
       title,
@@ -98,8 +99,12 @@ export default class Task extends Component {
 
   renderRegular() {
     const { detailed, completed } = this.state;
-    const { title, priority, description, date_created, date_deadline } = this.state.task;
-    const date_deadlinee = date_deadline === new Date().toJSON().slice(0,10) ?
+    let { title, priority, description, date_created, date_deadline } = this.state.task;
+    date_created = date_created === new Date().toJSON().slice(0,10) ?
+      "Today"
+      :
+      date_deadline;
+    date_deadline = date_deadline === new Date().toJSON().slice(0,10) ?
       "Today"
       :
       date_deadline;
@@ -129,21 +134,22 @@ export default class Task extends Component {
                   onClick={this.handleDeleteClick} />
             </IconMenu>
 
-            <h3>{title}</h3>
-            { detailed ?
-              <div>
-                <p>{description}</p>
-                <span>Date Created: {date_created}</span> <br />
-                <span>Deadline Date: {date_deadlinee}</span>
-                <br />
-                <LessIcon onClick={this.handleClickToToggleDetailed} />
-              </div>
-              :
-              <div className="center-icon">
-                <MoreIcon onClick={this.handleClickToToggleDetailed} />
-              </div>
-            }
-
+            <div onClick={this.handleClickToToggleDetailed}>
+              <h3>{title}</h3>
+              { detailed ?
+                <div>
+                  <p>{description}</p>
+                  <span>Date Created: {date_created}</span> <br />
+                  <span>Deadline Date: {date_deadline}</span>
+                  <br />
+                  <LessIcon className="icon" />
+                </div>
+                :
+                <div className="center-icon">
+                  <MoreIcon className="icon" />
+                </div>
+              }
+            </div>
           </div>
         </MuiThemeProvider>
       </li>

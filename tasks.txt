@@ -1,0 +1,9 @@
+date is not shown when choosing
+
+no progress bar when deleting
+
+editing doesent work
+
+show more needs to be in the middle
+
+sort data by priority

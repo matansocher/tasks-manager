@@ -10,6 +10,9 @@ export default function(state = [], action) {
       return _.concat(newState, action.payload);
     case EDIT_TASK:
       const i = _.findIndex(state, o => o.id === action.payload.id );
+      console.log(i);
+      console.log(newState[i]);
+      console.log(action.payload);
       newState[i] = action.payload;
       return newState;
     case DELETE_TASK:

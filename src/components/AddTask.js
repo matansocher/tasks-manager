@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { createDateFormat } from '../actions/CommonFunctions';
 import { connect } from 'react-redux';
-import { addTask } from '../actions';
+import { setTask } from '../actions';
 import { makeID } from '../actions/CommonFunctions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -18,7 +19,7 @@ class AddTask extends Component {
       title: '',
       priority: 3,
       description: '',
-      date_deadline: '', // new Date().toJSON().slice(0,10)
+      date_deadline: null, // new Date().toJSON().slice(0,10)
       gesture: false,
       gestureText: '',
       loading: false
@@ -35,8 +36,8 @@ class AddTask extends Component {
       const id = makeID();
       // const id = Math.floor((Math.random() * 100000) + 1);
       const date_created = new Date().toJSON().slice(0,10);
-      // this.props.setTask(1, "tuta", {
-      this.props.addTask("tuta", {
+      this.props.setTask(1, "tuta", {
+      // this.props.addTask("tuta", {
         id,
         title,
         priority,
@@ -62,8 +63,9 @@ class AddTask extends Component {
     this.setState(change);
   }
 
-  handleDateChange = (e, date) => {
-    this.setState({ date_deadline: date });
+  handleDateChange = (e, date_deadline) => {
+    date_deadline = createDateFormat(date_deadline);
+    this.setState({ date_deadline });
   };
 
   handlePriorityChange = (e, value) => {
@@ -114,5 +116,5 @@ class AddTask extends Component {
     );
   }
 }
-// export default connect(null, { setTask })(AddTask);
-export default connect(null, { addTask })(AddTask);
+export default connect(null, { setTask })(AddTask);
+// export default connect(null, { addTask })(AddTask);

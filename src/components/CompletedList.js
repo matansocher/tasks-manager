@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchTasks, editTask, deleteTask, completedOrReturnToTasks } from '../actions';
+import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -40,7 +40,7 @@ class CompletedList extends Component {
 
   editTask = (task) => {
     this.setState({ loading: true }, () => {
-      this.props.editTask("tuta", task, () => {
+      this.props.setTask(2, "tuta", task, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Saved", gesture: true });
         }, 1000);
@@ -50,7 +50,7 @@ class CompletedList extends Component {
 
   deleteTask = (task) => {
     this.setState({ loading: true }, () => {
-      this.props.deleteTask("tuta", task, () => {
+      this.props.deleteTask(2, "tuta", task, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Deleted Successfully", gesture: true });
         }, 1000);
@@ -114,4 +114,4 @@ function mapStateToProps(state) {
 }
 
 // export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);
-export default connect(mapStateToProps, { fetchTasks, editTask, deleteTask, completedOrReturnToTasks })(CompletedList);
+export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);

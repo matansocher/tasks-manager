@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchTasks, addTask, editTask, deleteTask, completedOrReturnToTasks } from '../actions';
+import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -42,7 +42,7 @@ class TasksList extends Component {
 
   editTask = (task) => {
     this.setState({ loading: true }, () => {
-      this.props.editTask("tuta", task, () => {
+      this.props.setTask(1, "tuta", task, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Saved", gesture: true });
         }, 1000);
@@ -52,7 +52,7 @@ class TasksList extends Component {
 
   deleteTask = (task) => {
     this.setState({ loading: true }, () => {
-      this.props.deleteTask("tuta", task, () => {
+      this.props.deleteTask(1, "tuta", task, () => {
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Deleted Successfully", gesture: true });
         }, 1000);
@@ -81,7 +81,7 @@ class TasksList extends Component {
   renderList() {
     const { tasks } = this.state;
     if (tasks.length === 1)
-      return (<div className="container container-fluid"><h2>No Tasks Yet!</h2></div>);
+      return (<div className="container container-fluid"><h2>No Tasks!</h2></div>);
 
     return (
       tasks.map(task => {
@@ -127,5 +127,5 @@ function mapStateToProps(state) {
     tasks: state.tasks
   };
 }
-// export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);
-export default connect(mapStateToProps, { fetchTasks, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
+export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(TasksList);
+// export default connect(mapStateToProps, { fetchTasks, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
