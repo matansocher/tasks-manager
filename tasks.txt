@@ -1,9 +1,9 @@
-date is not shown when choosing
-
 no progress bar when deleting
 
-editing doesent work
+show more arrow icon needs to be in the middle
 
-show more needs to be in the middle
+loading circle in middle of screen on blur on the other parts
 
-sort data by priority
+arrays need to be sorted by priority and then by title
+
+if hours or minutes is less than 10, add 0 to the number - in Task render

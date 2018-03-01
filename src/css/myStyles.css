@@ -68,3 +68,6 @@ textarea {
   text-align: 'center';
   display: 'inline-block';
 }
+.save-button {
+  font-size: 70px;
+}

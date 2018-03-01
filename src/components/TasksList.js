@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
+import { getMainColor } from '../actions/CommonFunctions';
+import { sortArray } from '../actions/CommonFunctions';
+import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks, saveCurrentTask } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
@@ -71,6 +73,7 @@ class TasksList extends Component {
   }
 
   handleAddClick = () => {
+    this.props.saveCurrentTask();
     this.props.history.push('/AddTask');
   }
 
@@ -79,7 +82,8 @@ class TasksList extends Component {
   };
 
   renderList() {
-    const { tasks } = this.state;
+    const tasks = sortArray(this.state.tasks);
+    // const { tasks } = this.state;
     if (tasks.length === 1)
       return (<div className="container container-fluid"><h2>No Tasks!</h2></div>);
 
@@ -104,12 +108,14 @@ class TasksList extends Component {
         <h1>Tasks</h1>
         <MuiThemeProvider>
           <div>
-            {this.state.loading ? <CircularProgress size={60} thickness={7} /> : <span />}
+          {this.state.loading ? <div className="center">
+            <CircularProgress size={150} thickness={10} />
+              </div>:<span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
             <FloatingActionButton className="float" onClick={this.handleAddClick}
-              backgroundColor={'#D61D4C'}>
+              backgroundColor={getMainColor()}>
               <ContentAdd />
             </FloatingActionButton>
 
@@ -127,5 +133,4 @@ function mapStateToProps(state) {
     tasks: state.tasks
   };
 }
-export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(TasksList);
-// export default connect(mapStateToProps, { fetchTasks, editTask, deleteTask, completedOrReturnToTasks })(TasksList);
+export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks, saveCurrentTask })(TasksList);

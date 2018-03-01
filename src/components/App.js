@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
+import { getMainColor } from '../actions/CommonFunctions';
 import AddTask from './AddTask';
 import TasksList from './TasksList';
 import CompletedList from './CompletedList';
@@ -20,7 +21,6 @@ import Download from 'material-ui/svg-icons/file/file-download';
 class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       open: false
     }
@@ -34,14 +34,12 @@ class App extends Component {
     this.setState({ open: !this.state.open });
   }
 
-  changeRoute = (e) => {
-    // console.log(e);
-    // console.log(this.props);
-    // this.props.history.push('/Completed');
+  closeDrawer = (e) => {
     this.setState({ open: false });
   }
 
   render() {
+    const mainColor = getMainColor();
     return (
       <Router>
         <div>
@@ -50,15 +48,15 @@ class App extends Component {
               <AppBar className="app-bar" title="Tasks-Manager"
                 iconClassNameRight="muidocs-icon-navigation-expand-more"
                 onClick={this.handleToggle}
-                style={{backgroundColor: '#D61D4C', position: 'fixed', top: 0}}
+                style={{backgroundColor: mainColor, position: 'fixed', top: 0}}
               />
               <Drawer width={300} docked={false} open={this.state.open} onRequestChange={this.closeDrawer}>
-                <AppBar className="app-bar" style={{backgroundColor: '#D61D4C'}} title="Tasks-Manager" />
+                <AppBar className="app-bar" style={{backgroundColor: mainColor}} title="Tasks-Manager" />
                 <Paper>
                   <Menu>
-                    <Link to="/"><MenuItem onClick={this.changeRoute} primaryText="Tasks List" leftIcon={<ViewListIcon />} /></ Link>
-                    <Link to="/Completed"><MenuItem onClick={this.changeRoute} primaryText="Completed Tasks" leftIcon={<DoneIcon />} /></ Link>
-                    <MenuItem onClick={this.changeRoute} primaryText="Settings" leftIcon={<SettingsIcon />} />
+                    <Link to="/"><MenuItem onClick={this.closeDrawer} primaryText="Tasks List" leftIcon={<ViewListIcon />} /></ Link>
+                    <Link to="/Completed"><MenuItem onClick={this.closeDrawer} primaryText="Completed Tasks" leftIcon={<DoneIcon />} /></ Link>
+                    <MenuItem onClick={this.closeDrawer} primaryText="Settings" leftIcon={<SettingsIcon />} />
                     <Divider />
                     <MenuItem primaryText="Contact Us" leftIcon={<ContentCopy />} />
                     <MenuItem primaryText="About Us" leftIcon={<Download />} />

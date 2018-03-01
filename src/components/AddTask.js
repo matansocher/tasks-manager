@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createDateFormat } from '../actions/CommonFunctions';
+import { createDateFormat, createTimeFormat } from '../actions/CommonFunctions';
 import { connect } from 'react-redux';
 import { setTask } from '../actions';
 import { makeID } from '../actions/CommonFunctions';
@@ -8,18 +8,20 @@ import CircularProgress from 'material-ui/CircularProgress';
 import Slider from 'material-ui/Slider';
 import Snackbar from 'material-ui/Snackbar';
 import DatePicker from 'material-ui/DatePicker';
+import TimePicker from 'material-ui/TimePicker';
 import BackIcon from 'material-ui/svg-icons/navigation/chevron-left';
-import SaveIcon from 'material-ui/svg-icons/action/done';
-
+import FlatButton from 'material-ui/FlatButton';
 
 class AddTask extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: '',
       title: '',
       priority: 3,
       description: '',
-      date_deadline: null, // new Date().toJSON().slice(0,10)
+      date_deadline: null,
+      time_deadline: null,
       gesture: false,
       gestureText: '',
       loading: false
@@ -27,20 +29,28 @@ class AddTask extends Component {
   }
 
   componentDidMount() {
-    // console.log('mounted');
+    const { id, title, priority, description, date_deadline, time_deadline } = this.props.currentTask;
+    this.setState({
+      id,
+      title,
+      priority,
+      description,
+      date_deadline,
+      time_deadline
+    });
   }
 
   addTask = () => {
-
-    console.log(this.state);
     this.setState({ loading: true }, () => {
-      const { title, priority, description, date_deadline } = this.state;
+      const { id, title, priority, description, date_deadline, time_deadline } = this.state;
+      const realID = id ? id : makeID();
       this.props.setTask(1, "tuta", {
-        id: makeID(),
+        id: realID,
         title,
         priority,
         date_created: new Date().toJSON().slice(0,10),
-        date_deadline,
+        date_deadline: createDateFormat(date_deadline),
+        time_deadline: createTimeFormat(time_deadline),
         description
       }, () => {
         setTimeout(() => {
@@ -62,17 +72,19 @@ class AddTask extends Component {
   }
 
   handleDateChange = (e, date_deadline) => {
-    console.log(date_deadline);
-    // date_deadline = createDateFormat(date_deadline);
     this.setState({ date_deadline });
   };
+
+  handleTimeChange = (e, time_deadline) => {
+    this.setState({ time_deadline });
+  }
 
   handlePriorityChange = (e, value) => {
     this.setState({ priority: value });
   }
 
   render() {
-    const { loading, gesture, gestureText, title, priority, description, date_deadline } = this.state;
+    const { loading, gesture, gestureText, title, priority, description, date_deadline, time_deadline } = this.state;
     const styles = {
       largeIcon: {
         width: 50,
@@ -82,15 +94,17 @@ class AddTask extends Component {
     };
     return (
       <div className="container container-fluid blue-font">
-        <h1>Add Task</h1>
+        <h1>Set Task</h1>
         <MuiThemeProvider>
           <div>
-            {loading ? <CircularProgress size={80} thickness={8} /> : <span />}
+            {loading ? <div className="center">
+              <CircularProgress size={150} thickness={10} />
+                </div>:<span />}
             <Snackbar open={gesture} message={gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
             <BackIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
-            <SaveIcon style={styles.largeIcon} className="pull-right icon" onClick={this.addTask} />
+            <FlatButton labelStyle={{ fontSize: '25px'}} label="Save" className="pull-right save-button" onClick={this.addTask} />
 
             <br /><br />
 
@@ -109,11 +123,23 @@ class AddTask extends Component {
               value={date_deadline}
               onChange={this.handleDateChange} />
 
+            <TimePicker
+              format="24hr"
+              value={time_deadline}
+              onChange={this.handleTimeChange}
+              hintText="Dead Line Hour"
+            />
           </div>
         </MuiThemeProvider>
       </div>
     );
   }
 }
-export default connect(null, { setTask })(AddTask);
-// export default connect(null, { addTask })(AddTask);
+
+function mapStateToProps(state) {
+  return {
+    currentTask: state.currentTask
+  };
+}
+
+export default connect(mapStateToProps, { setTask })(AddTask);

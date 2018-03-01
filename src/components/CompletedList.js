@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import { sortArray } from '../actions/CommonFunctions';
 import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -60,7 +61,7 @@ class CompletedList extends Component {
 
   completedOrReturn = (task, type) => {
     this.setState({ loading: true } , () => {
-      this.props.completedOrReturnToTasks(type, "tuta", task, () => { // 1 is to move to completed, 2 is to move back to todos
+      this.props.completedOrReturnToTasks(type, "tuta", task, () => { // type: 1 is to move to completed, 2 is to move back to todos
         setTimeout(() => {
           this.setState({ loading: false, gestureText: "Task Completed, Well Done", gesture: true });
         }, 1000);
@@ -68,8 +69,13 @@ class CompletedList extends Component {
     });
   }
 
+  handleRequestClose = () => {
+    this.setState({ gesture: false });
+  };
+
   renderList() {
-    const { completed } = this.state;
+    const completed = sortArray(this.state.completed);
+    // const { completed } = this.state;
     if (completed.length === 1)
       return (<div className="container container-fluid"><h2>No Tasks Completed Yet!</h2></div>);
 
@@ -94,7 +100,9 @@ class CompletedList extends Component {
         <h1>Completed Tasks</h1>
         <MuiThemeProvider>
           <div>
-            {this.state.loading ? <CircularProgress size={60} thickness={7} /> : <span />}
+          {this.state.loading ? <div className="center">
+            <CircularProgress size={150} thickness={10} />
+              </div>:<span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
@@ -113,5 +121,4 @@ function mapStateToProps(state) {
   };
 }
 
-// export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);
 export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);

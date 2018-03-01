@@ -1,4 +1,8 @@
-// import React from 'react';
+// import React from 'react';(
+
+export function getMainColor() {
+  return '#1976D2';
+}
 
 export function getBackgroundColor(priority) {
   const wellDone = '#F74D4D'; // high priority
@@ -28,9 +32,56 @@ export function makeID() {
   return text;
 }
 
+export function convertDateStringToObject(date) {
+  if(date === "N/A" || date === '')
+    return null;
+  return new Date(date);
+}
+
+export function convertTimeStringToObject(time) {
+  if(time === "N/A" || time === '')
+    return null;
+  const newTime = new Date();
+  newTime.setHours(time.substr(0, time.indexOf(':')));
+  newTime.setMinutes(time.substr(time.indexOf(':')+1, time.length));
+  return newTime;
+}
+
 export function createDateFormat(date) {
-  const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate();
-  const month = date.getMonth()+1 < 10 ? `0${date.getMonth()+1}` : date.getMonth()+1;
-  const year = date.getFullYear();
-  return `${year}-${month}-${day}`;
+  if(!date) {
+    return "N/A";
+  } else {
+    date = new Date(date);
+    date.setDate(date.getDate()+1);
+    return date.toJSON().slice(0,10);
+  }
+}
+
+export function createDateFormatToPresent(date) {
+  date = date === new Date().toJSON().slice(0,10) ?
+    "Today"
+    :
+    date;
+  return date;
+}
+
+export function createTimeFormat(time) {
+  return time ? `${time.getHours()}:${time.getMinutes()}` : "N/A";
+}
+
+export function createTimeFormatToPresent(time) {
+  if(time === "N/A") {
+    return time;
+  }
+  let hours = time.substr(0, time.indexOf(':'));
+  let minutes = time.substr(time.indexOf(':')+1, time.length);
+  hours = hours < 10 ? `0${hours}` : hours;
+  minutes = minutes < 10 ? `0${minutes}` : minutes;
+  return `${hours}:${minutes}`
+}
+
+export function sortArray(array) {
+  return array.sort((a, b) => {
+    return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
+  });
 }
