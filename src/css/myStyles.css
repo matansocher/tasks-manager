@@ -4,15 +4,8 @@ body {
   font-family: sans-serif;
   background-color: #edf3ff;
 }
-textarea {
-  background-color: red;
-  color: red;
-}
 .center {
   text-align: center;
-}
-.center-icon {
-  left: 60%;
 }
 .blue-font {
   color: #072f70;
@@ -69,5 +62,23 @@ textarea {
   display: 'inline-block';
 }
 .save-button {
-  font-size: 70px;
+  font-size: 30px;
+  text-align: center;
+  width: 100%;
+}
+.full-width {
+  width: 100%;
+}
+.task {
+  position: relative
+}
+.three-dots {
+  float: right;
+  position: relative;
+  top: -25px;
+  right: -18px;
+}
+.more-less {
+  position: relative;
+  margin: auto;
 }

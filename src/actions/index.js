@@ -6,12 +6,6 @@ export function fetchTasks(type, username, callback) { // 1 is tasks, 2 is compl
   const TYPE = type === 1 ? FETCH_TASKS : FETCH_COMPLETED;
   const list = type === 1 ? 'tasks' : 'completed';
   return dispatch => {
-
-    // var ref = firebase.database().ref("dinosaurs");
-    // ref.orderByChild("height").on("child_added", function(snapshot) {
-    //   console.log(snapshot.key + " was " + snapshot.val().height + " m tall");
-    // });
-
     fire.database().ref(`${username}/${list}`).orderByChild('priority').once('value', snap => {
       const tasksObject = snap.val();
       const array = _.values(tasksObject);
@@ -108,33 +102,7 @@ export function saveCurrentTask(task) {
       description: ''
     };
   }
-  //   return {
-  //     type: SAVE_TASK,
-  //     payload: empty
-  //   }
-  // }
 
-
-  // let { id, title, priority, date_created, date_deadline, time_deadline, description } = task;
-
-  // id = !id ? '' : id;
-  // title = !title ? '' : title;
-  // priority = !priority ? 3 : priority;
-  // date_created = !date_created ? null : date_created;
-  // date_deadline = !date_deadline ? null : date_deadline;
-  // time_deadline = !time_deadline ? null : time_deadline;
-  // description = !description ? '' : description;
-
-
-  // const newTask = {
-  //   id: !id ? '' : id,
-  //   title: !title ? '' : title,
-  //   priority: !priority ? 3 : priority,
-  //   date_created: !date_created ? null : date_created,
-  //   date_deadline: !date_deadline ? null : date_deadline,
-  //   time_deadline: !time_deadline ? null : time_deadline,
-  //   description: !description ? '' : description
-  // }
   return {
     type: SAVE_TASK,
     payload: task

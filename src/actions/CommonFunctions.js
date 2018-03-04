@@ -80,8 +80,15 @@ export function createTimeFormatToPresent(time) {
   return `${hours}:${minutes}`
 }
 
-export function sortArray(array) {
+export function sortArray(array, sortBy) {
   return array.sort((a, b) => {
+    switch(sortBy) {
+      case 'title': return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);
+      case 'deadLine_date': return (a.deadLine_date > b.deadLine_date) ? 1 : ((b.deadLine_date > a.deadLine_date) ? -1 : 0);
+      case 'date_created': return (a.date_created > b.date_created) ? 1 : ((b.date_created > a.date_created) ? -1 : 0);
+      case 'priority': return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
+      default: return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
+    }
     return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
   });
 }

@@ -113,8 +113,8 @@ class Task extends Component {
     return (
       <li className="col-sm-12 col-md-12 list-group-item" style={styles.bgcolor}>
         <MuiThemeProvider>
-          <div>
-            <IconMenu className="pull-right"
+          <div className="task">
+            <IconMenu className="three-dots"
               iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
               targetOrigin={{horizontal: 'right', vertical: 'top'}}
               anchorOrigin={{horizontal: 'right', vertical: 'top'}}>
@@ -142,10 +142,12 @@ class Task extends Component {
                   <span>Deadline Date: {date_deadline}</span> <br />
                   <span>Deadline Time: {time_deadline}</span>
                   <br />
-                  <LessIcon className="icon" />
+                  <div className="center more-less">
+                    <LessIcon className="icon" />
+                  </div>
                 </div>
                 :
-                <div className="center-icon">
+                <div className="center more-less">
                   <MoreIcon className="icon" />
                 </div>
               }

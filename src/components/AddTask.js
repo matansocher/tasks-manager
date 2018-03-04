@@ -11,6 +11,7 @@ import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import BackIcon from 'material-ui/svg-icons/navigation/chevron-left';
 import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
 
 class AddTask extends Component {
   constructor(props) {
@@ -104,31 +105,37 @@ class AddTask extends Component {
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
             <BackIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
-            <FlatButton labelStyle={{ fontSize: '25px'}} label="Save" className="pull-right save-button" onClick={this.addTask} />
 
-            <br /><br />
 
-            <textarea className="form-control" name="title" placeholder="Title"
-              value={title} onChange={this.handleChange} />
+            <br /><br /><br />
+
+            <TextField floatingLabelText="Title" multiLine={true} fullWidth={true}
+              rows={2} value={title} name="title" onChange={this.handleChange}
+            />
 
             <Slider min={1} max={5} step={1}
               value={priority}
               onChange={this.handlePriorityChange} />
             <h4>{priority}</h4>
 
-            <textarea className="form-control" name="description" placeholder="Description"
-              value={description} onChange={this.handleChange} />
+            <TextField floatingLabelText="Description" multiLine={true} fullWidth={true}
+              rows={3} value={description} name="description" onChange={this.handleChange}
+            />
 
             <DatePicker hintText="Dead Line Date"
+              fullWidth={true}
               value={date_deadline}
               onChange={this.handleDateChange} />
 
             <TimePicker
+              fullWidth={true}
               format="24hr"
               value={time_deadline}
               onChange={this.handleTimeChange}
               hintText="Dead Line Hour"
             />
+            <br/>
+            <button className="btn btn-success save-button" onClick={this.addTask}>Save</button>
           </div>
         </MuiThemeProvider>
       </div>

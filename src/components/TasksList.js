@@ -10,12 +10,20 @@ import CircularProgress from 'material-ui/CircularProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Snackbar from 'material-ui/Snackbar';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
+import Popover from 'material-ui/Popover';
+import SortIcon from 'material-ui/svg-icons/content/sort';
 
 class TasksList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tasks: [],
+      sortBy: "priority",
+      popOverSort: false,
       gesture: false,
       gestureText: '',
       loading: false
@@ -81,22 +89,41 @@ class TasksList extends Component {
     this.setState({ gesture: false });
   };
 
+  handleChangeCombo = (event, index, value) => {
+    this.setState({ sortBy: value });
+  }
+
+  handleSortByChange = (e, value) => {
+    this.setState({ sortBy: value, popOverSort: false });
+  }
+
+  handleSortOptionsClick = (event) => {
+    event.preventDefault();
+    this.setState({
+      popOverSort: true,
+      anchorEl: event.currentTarget
+    });
+  }
+
+  handleRequestPopoverClose = () => {
+    this.setState({ open: false });
+  };
+
   renderList() {
-    const tasks = sortArray(this.state.tasks);
+    const tasks = sortArray(this.state.tasks, this.state.sortBy);
     // const { tasks } = this.state;
     if (tasks.length === 1)
       return (<div className="container container-fluid"><h2>No Tasks!</h2></div>);
 
     return (
       tasks.map(task => {
-        const key = `${task.id}`;
         if (task.id !== 0) {
-          return (<Task key={key} task={task} completed={false}
+          return (<Task key={task.id} task={task} completed={false}
             editTask={this.editTask}
             deleteTask={this.deleteTask}
             completedOrReturn={this.completedOrReturn} />)
         }
-        return <span key={key}/>;
+        return <span key={task.id}/>;
       })
     );
   }
@@ -108,6 +135,30 @@ class TasksList extends Component {
         <h1>Tasks</h1>
         <MuiThemeProvider>
           <div>
+
+          <RaisedButton className="pull-right" label="Sort By" icon={<SortIcon />}
+            onClick={this.handleSortOptionsClick}
+          />
+
+          <Popover
+            open={this.state.popOverSort}
+            anchorEl={this.state.anchorEl}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.handleRequestPopoverClose}
+          >
+            <Menu value={this.state.sortBy} onChange={this.handleSortByChange}>
+              <MenuItem
+                value="title" primaryText="Title" />
+              <MenuItem
+                value="deadLine_date" primaryText="Dead Line Date" />
+              <MenuItem
+                value="date_created" primaryText="Date Created" />
+              <MenuItem
+                value="priority" primaryText="Priority" />
+            </Menu>
+          </Popover>
+
           {this.state.loading ? <div className="center">
             <CircularProgress size={150} thickness={10} />
               </div>:<span />}
@@ -134,3 +185,20 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks, saveCurrentTask })(TasksList);
+
+
+// <DropDownMenu
+//   value={this.state.sortBy}
+//   onChange={this.handleSortByChange}
+//   autoWidth={false}
+//   className="combo"
+// >
+//   <MenuItem
+//     value="title" primaryText="Title" />
+//   <MenuItem
+//     value="deadLine_date" primaryText="Dead Line Date" />
+//   <MenuItem
+//     value="date_created" primaryText="Date Created" />
+//   <MenuItem
+//     value="priority" primaryText="Priority" />
+// </DropDownMenu>
