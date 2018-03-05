@@ -1,11 +1,4 @@
 add register and sign up
 swipe to delete
-loading circle in middle of screen and blur on the other parts
 
-no progress bar when deleting
-
-show more arrow icon needs to be in the middle
-
-add icon with more character
-
-back button besides the set task header
+add icon with more character - chen sent behance

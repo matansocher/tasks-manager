@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { saveCurrentTask } from '../actions';
-import { convertDateStringToObject, convertTimeStringToObject, getBackgroundColor, createDateFormatToPresent, createTimeFormatToPresent } from '../actions/CommonFunctions';
+import * as CommonFunctions from '../actions/CommonFunctions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MenuItem from 'material-ui/MenuItem';
 import IconMenu from 'material-ui/IconMenu';
@@ -10,7 +10,6 @@ import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import DoneIcon from 'material-ui/svg-icons/action/check-circle';
 import AssignmentIcon from 'material-ui/svg-icons/action/assignment';
-import MoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import LessIcon from 'material-ui/svg-icons/navigation/expand-less';
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit';
 import Delete from 'material-ui/svg-icons/action/delete';
@@ -27,14 +26,13 @@ class Task extends Component {
       date_deadline,
       time_deadline,
       priority,
-      // editing: false,
       detailed: false,
       completed: props.completed
     };
   }
 
   componentDidMount() {
-    const color = getBackgroundColor(this.state.task.priority);
+    const color = CommonFunctions.getBackgroundColor(this.state.task.priority);
     this.styles = {
       bgcolor: {
         backgroundColor: color
@@ -48,9 +46,9 @@ class Task extends Component {
       id: !task.id ? '' : task.id,
       title: !title ? '' : title,
       priority: !priority ? 3 : priority,
-      date_created: convertDateStringToObject(date_created),
-      date_deadline:  convertDateStringToObject(date_deadline),
-      time_deadline:  convertTimeStringToObject(time_deadline),
+      date_created: CommonFunctions.convertDateStringToObject(date_created),
+      date_deadline:  CommonFunctions.convertDateStringToObject(date_deadline),
+      time_deadline:  CommonFunctions.convertTimeStringToObject(time_deadline),
       description: !description ? '' : description
     });
   }
@@ -104,11 +102,11 @@ class Task extends Component {
   render() {
     const { detailed, completed } = this.state;
     let { title, priority, description, date_created, date_deadline, time_deadline } = this.state.task;
-    date_created = createDateFormatToPresent(date_created);
-    date_deadline = createDateFormatToPresent(date_deadline);
-    time_deadline = createTimeFormatToPresent(time_deadline);
+    date_created = CommonFunctions.createDateFormatToPresent(date_created);
+    date_deadline = CommonFunctions.createDateFormatToPresent(date_deadline);
+    time_deadline = CommonFunctions.createTimeFormatToPresent(time_deadline);
     const styles = {
-      bgcolor: { backgroundColor: getBackgroundColor(priority) }
+      bgcolor: { backgroundColor: CommonFunctions.getBackgroundColor(priority) }
     };
     return (
       <li className="col-sm-12 col-md-12 list-group-item" style={styles.bgcolor}>
@@ -147,8 +145,8 @@ class Task extends Component {
                   </div>
                 </div>
                 :
-                <div className="center more-less">
-                  <MoreIcon className="icon" />
+                <div>
+                  <span className="show-more">show more...</span>
                 </div>
               }
             </div>

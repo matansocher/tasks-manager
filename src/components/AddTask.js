@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createDateFormat, createTimeFormat } from '../actions/CommonFunctions';
+import * as CommonFunctions from '../actions/CommonFunctions';
 import { connect } from 'react-redux';
 import { setTask } from '../actions';
 import { makeID } from '../actions/CommonFunctions';
@@ -10,7 +10,6 @@ import Snackbar from 'material-ui/Snackbar';
 import DatePicker from 'material-ui/DatePicker';
 import TimePicker from 'material-ui/TimePicker';
 import BackIcon from 'material-ui/svg-icons/navigation/chevron-left';
-import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
 class AddTask extends Component {
@@ -50,8 +49,8 @@ class AddTask extends Component {
         title,
         priority,
         date_created: new Date().toJSON().slice(0,10),
-        date_deadline: createDateFormat(date_deadline),
-        time_deadline: createTimeFormat(time_deadline),
+        date_deadline: CommonFunctions.createDateFormat(date_deadline),
+        time_deadline: CommonFunctions.createTimeFormat(time_deadline),
         description
       }, () => {
         setTimeout(() => {
@@ -95,7 +94,7 @@ class AddTask extends Component {
     };
     return (
       <div className="container container-fluid blue-font">
-        <h1>Set Task</h1>
+
         <MuiThemeProvider>
           <div>
             {loading ? <div className="center">
@@ -104,9 +103,10 @@ class AddTask extends Component {
             <Snackbar open={gesture} message={gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
-            <BackIcon style={styles.largeIcon} className="pull-left icon" onClick={this.handleCancelClick} />
-
-
+            <div onClick={this.handleCancelClick}>
+              <BackIcon style={styles.largeIcon} className="pull-left icon back-icon" />
+              <h1 className="pull-left">Set Task</h1>
+            </div>
             <br /><br /><br />
 
             <TextField floatingLabelText="Title" multiLine={true} fullWidth={true}

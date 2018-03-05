@@ -54,6 +54,9 @@ body {
 .icon:hover {
   cursor: pointer;
 }
+.back-icon {
+  margin-top: 14px;
+}
 .circle-avatar {
   height: 100;
   width: 100;
@@ -81,4 +84,7 @@ body {
 .more-less {
   position: relative;
   margin: auto;
+}
+.show-more {
+  color: #1A237E;
 }

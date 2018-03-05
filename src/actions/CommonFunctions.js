@@ -89,6 +89,5 @@ export function sortArray(array, sortBy) {
       case 'priority': return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
       default: return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
     }
-    return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
   });
 }

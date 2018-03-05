@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { getMainColor } from '../actions/CommonFunctions';
-import { sortArray } from '../actions/CommonFunctions';
+import * as CommonFunctions from '../actions/CommonFunctions';
 import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks, saveCurrentTask } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import CircularProgress from 'material-ui/CircularProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Snackbar from 'material-ui/Snackbar';
-import DropDownMenu from 'material-ui/DropDownMenu';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import SortIcon from 'material-ui/svg-icons/content/sort';
+import { List } from 'react-content-loader';
 
 class TasksList extends Component {
   constructor(props) {
@@ -110,7 +108,7 @@ class TasksList extends Component {
   };
 
   renderList() {
-    const tasks = sortArray(this.state.tasks, this.state.sortBy);
+    const tasks = CommonFunctions.sortArray(this.state.tasks, this.state.sortBy);
     // const { tasks } = this.state;
     if (tasks.length === 1)
       return (<div className="container container-fluid"><h2>No Tasks!</h2></div>);
@@ -159,14 +157,16 @@ class TasksList extends Component {
             </Menu>
           </Popover>
 
+          <br /><br />
+
           {this.state.loading ? <div className="center">
-            <CircularProgress size={150} thickness={10} />
+            <List />
               </div>:<span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
 
             <FloatingActionButton className="float" onClick={this.handleAddClick}
-              backgroundColor={getMainColor()}>
+              backgroundColor={CommonFunctions.getMainColor()}>
               <ContentAdd />
             </FloatingActionButton>
 
@@ -185,20 +185,3 @@ function mapStateToProps(state) {
   };
 }
 export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks, saveCurrentTask })(TasksList);
-
-
-// <DropDownMenu
-//   value={this.state.sortBy}
-//   onChange={this.handleSortByChange}
-//   autoWidth={false}
-//   className="combo"
-// >
-//   <MenuItem
-//     value="title" primaryText="Title" />
-//   <MenuItem
-//     value="deadLine_date" primaryText="Dead Line Date" />
-//   <MenuItem
-//     value="date_created" primaryText="Date Created" />
-//   <MenuItem
-//     value="priority" primaryText="Priority" />
-// </DropDownMenu>

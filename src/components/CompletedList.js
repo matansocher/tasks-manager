@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
-import { sortArray } from '../actions/CommonFunctions';
+import * as CommonFunctions from '../actions/CommonFunctions';
 import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
 import Snackbar from 'material-ui/Snackbar';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
+import Popover from 'material-ui/Popover';
+import SortIcon from 'material-ui/svg-icons/content/sort';
 
 class CompletedList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       completed: [],
+      sortBy: "priority",
       gesture: false,
       gestureText: '',
       loading: false
@@ -73,8 +79,24 @@ class CompletedList extends Component {
     this.setState({ gesture: false });
   };
 
+  handleChangeCombo = (event, index, value) => {
+    this.setState({ sortBy: value });
+  }
+
+  handleSortByChange = (e, value) => {
+    this.setState({ sortBy: value, popOverSort: false });
+  }
+
+  handleSortOptionsClick = (event) => {
+    event.preventDefault();
+    this.setState({
+      popOverSort: true,
+      anchorEl: event.currentTarget
+    });
+  }
+
   renderList() {
-    const completed = sortArray(this.state.completed);
+    const completed = CommonFunctions.sortArray(this.state.completed, this.state.sortBy);
     // const { completed } = this.state;
     if (completed.length === 1)
       return (<div className="container container-fluid"><h2>No Tasks Completed Yet!</h2></div>);
@@ -100,6 +122,31 @@ class CompletedList extends Component {
         <h1>Completed Tasks</h1>
         <MuiThemeProvider>
           <div>
+            <RaisedButton className="pull-right" label="Sort By" icon={<SortIcon />}
+              onClick={this.handleSortOptionsClick}
+            />
+
+            <Popover
+              open={this.state.popOverSort}
+              anchorEl={this.state.anchorEl}
+              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+              targetOrigin={{horizontal: 'left', vertical: 'top'}}
+              onRequestClose={this.handleRequestPopoverClose}
+            >
+              <Menu value={this.state.sortBy} onChange={this.handleSortByChange}>
+                <MenuItem
+                  value="title" primaryText="Title" />
+                <MenuItem
+                  value="deadLine_date" primaryText="Dead Line Date" />
+                <MenuItem
+                  value="date_created" primaryText="Date Created" />
+                <MenuItem
+                  value="priority" primaryText="Priority" />
+              </Menu>
+            </Popover>
+
+            <br /><br />
+
           {this.state.loading ? <div className="center">
             <CircularProgress size={150} thickness={10} />
               </div>:<span />}
