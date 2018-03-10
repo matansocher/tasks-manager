@@ -6,3 +6,5 @@ export const FETCH_COMPLETED = 'fetch_completed';
 export const MARK_AS_COMPLETED = 'mark_as_completed';
 export const RETURN_TO_TASKS = 'return_to_tasks';
 export const SAVE_TASK = 'save_task';
+export const FETCH_SETTINGS = 'fetch_settings';
+export const SAVE_SETTINGS = 'save_settings';

@@ -2,3 +2,5 @@ add register and sign up
 swipe to delete
 
 add icon with more character - chen sent behance
+
+connect the settings to redux

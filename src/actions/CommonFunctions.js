@@ -83,10 +83,31 @@ export function createTimeFormatToPresent(time) {
 export function sortArray(array, sortBy) {
   return array.sort((a, b) => {
     switch(sortBy) {
-      case 'title': return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);
-      case 'deadLine_date': return (a.deadLine_date > b.deadLine_date) ? 1 : ((b.deadLine_date > a.deadLine_date) ? -1 : 0);
-      case 'date_created': return (a.date_created > b.date_created) ? 1 : ((b.date_created > a.date_created) ? -1 : 0);
-      case 'priority': return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
+      case 'title':
+        return (a.title > b.title) ? 1 : ((b.title > a.title) ? -1 : 0);
+      case 'deadLine_date':
+        array.map((task) => {
+          const splitDays = task.date_deadline.split('-');
+          let numOfDays = 365*splitDays[0]+30*splitDays[1]+splitDays[2];
+          numOfDays = isNaN(numOfDays) ? "0" : numOfDays;
+          const splitHours = task.time_deadline.split(':');
+          let numOfHours = 24*splitHours[0]+splitHours[1];
+          numOfHours = isNaN(numOfHours) ? "0" : numOfHours;
+          task.numOfDays = numOfDays + numOfHours;
+          return task;
+        });
+        return (a.numOfDays > b.numOfDays) ? 1 : ((b.numOfDays > a.numOfDays) ? -1 : 0);
+      case 'date_created':
+        array.map((task) => {
+          const splitDays = task.date_created.split('-');
+          let numOfDays = 365*splitDays[0]+30*splitDays[1]+splitDays[2];
+          numOfDays = isNaN(numOfDays) ? "0" : numOfDays;
+          task.numOfDays = numOfDays;
+          return task;
+        });
+        return (a.numOfDays > b.numOfDays) ? 1 : ((b.numOfDays > a.numOfDays) ? -1 : 0);
+      case 'priority':
+        return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
       default: return (a.priority > b.priority) ? 1 : ((b.priority > a.priority) ? -1 : 0);
     }
   });

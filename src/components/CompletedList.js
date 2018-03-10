@@ -2,23 +2,25 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 import * as CommonFunctions from '../actions/CommonFunctions';
-import { fetchTasks, setTask, deleteTask, completedOrReturnToTasks } from '../actions';
+import * as actions from '../actions';
 import Task from './Task';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import CircularProgress from 'material-ui/CircularProgress';
 import Snackbar from 'material-ui/Snackbar';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import SortIcon from 'material-ui/svg-icons/content/sort';
+import { List } from 'react-content-loader';
 
 class CompletedList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       completed: [],
-      sortBy: "priority",
+      settings: {},
+      sortBy: '',
+      popOverSort: false,
       gesture: false,
       gestureText: '',
       loading: false
@@ -29,7 +31,9 @@ class CompletedList extends Component {
     this.setState({ loading: true }, () => {
       if(_.isEmpty(this.state.completed)) {
         this.props.fetchTasks(2, "tuta", () => { // 2 is for completed tasks
-          this.setState({ loading: false });
+          this.props.fetchSettings("tuta", () => {
+            this.setState({ loading: false });
+          });
         });
       }
     });
@@ -38,8 +42,11 @@ class CompletedList extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ loading: true }, () => {
       if (this.state.completed !== nextProps.completed) { // check if tasks array has changed
-        const completed = nextProps.completed;
-        this.setState({ completed });
+        this.setState({ completed: nextProps.completed });
+      }
+      if(!_.isEqual(this.state.settings, nextProps.settings)) { // check if settings object has changed
+        const { settings } = nextProps;
+        this.setState({ settings, sortBy: settings.sortBy });
       }
       this.setState({ loading: false });
     });
@@ -69,7 +76,7 @@ class CompletedList extends Component {
     this.setState({ loading: true } , () => {
       this.props.completedOrReturnToTasks(type, "tuta", task, () => { // type: 1 is to move to completed, 2 is to move back to todos
         setTimeout(() => {
-          this.setState({ loading: false, gestureText: "Task Completed, Well Done", gesture: true });
+          this.setState({ loading: false, gestureText: "Lets Get To Work!", gesture: true });
         }, 1000);
       });
     });
@@ -79,12 +86,14 @@ class CompletedList extends Component {
     this.setState({ gesture: false });
   };
 
-  handleChangeCombo = (event, index, value) => {
-    this.setState({ sortBy: value });
-  }
-
   handleSortByChange = (e, value) => {
-    this.setState({ sortBy: value, popOverSort: false });
+    this.setState({ loading: true, sortBy: value, popOverSort: false }, () => {
+      const settings = this.state.settings;
+      settings.sortBy = this.state.sortBy;
+      this.props.saveSettings("tuta", settings, () => {
+        this.setState({ loading: false, gestureText: "Settings Saved Successfully", gesture: true });
+      });
+    });
   }
 
   handleSortOptionsClick = (event) => {
@@ -95,6 +104,10 @@ class CompletedList extends Component {
     });
   }
 
+  handleRequestPopoverClose = () => {
+    this.setState({ open: false });
+  };
+
   renderList() {
     const completed = CommonFunctions.sortArray(this.state.completed, this.state.sortBy);
     // const { completed } = this.state;
@@ -103,14 +116,13 @@ class CompletedList extends Component {
 
     return (
       completed.map(task => {
-        const key = `${task.id}`;
         if (task.id !== 0) {
-          return (<Task key={key} task={task} completed={true}
+          return (<Task key={task.id} task={task} completed={true}
             editTask={this.editTask}
             deleteTask={this.deleteTask}
             completedOrReturn={this.completedOrReturn} />)
         }
-        return <span key={key}/>;
+        return <span key={task.id}/>;
       })
     );
   }
@@ -148,7 +160,7 @@ class CompletedList extends Component {
             <br /><br />
 
           {this.state.loading ? <div className="center">
-            <CircularProgress size={150} thickness={10} />
+            <List />
               </div>:<span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
@@ -164,8 +176,9 @@ class CompletedList extends Component {
 
 function mapStateToProps(state) {
   return {
-    completed: state.completed
+    completed: state.completed,
+    settings: state.settings
   };
 }
 
-export default connect(mapStateToProps, { fetchTasks, setTask, deleteTask, completedOrReturnToTasks })(CompletedList);
+export default connect(mapStateToProps, actions)(CompletedList);
