@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import SortIcon from 'material-ui/svg-icons/content/sort';
-import { List } from 'react-content-loader';
+import CircularProgress from 'material-ui/CircularProgress';
 
 class CompletedList extends Component {
   constructor(props) {
@@ -148,7 +148,7 @@ class CompletedList extends Component {
             <br /><br />
 
           {this.state.loading ? <div className="center">
-            <List />
+            <CircularProgress size={60} thickness={7} />
               </div>:<span />}
             <Snackbar open={this.state.gesture} message={this.state.gestureText}
               autoHideDuration={4000} onRequestClose={this.handleRequestClose} />
